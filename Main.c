@@ -10,7 +10,7 @@ void drawRectangle(SDL_Renderer* renderer, int x, int y, int width, int height) 
     SDL_Rect rect = { x, y, width, height };
     SDL_RenderFillRect(renderer, &rect);
 }
-void drawCircle(SDL_Renderer* renderer, int centerX, int centerY) {
+void drawCircle(SDL_Renderer * renderer,int centerX, int centerY) {
     int radius = 13;
 
     for (int y = -radius; y <= radius; ++y) {
@@ -21,14 +21,39 @@ void drawCircle(SDL_Renderer* renderer, int centerX, int centerY) {
         }
     }
 }
+int max(int a, int b, int c) {
+    if (a > b && a > c) {
+        return a;
+    }
+    else if (b > c && b > a) {
+        return b;
+    }
+    else {
+        return c;
+    }
+    
+}
+int min(int a, int b, int c) {
+    if (a < b && a < c) {
+        return a;
+    }
+    else if (b < c && b < a) {
+        return b;
+    }
+    else {
+        return c;
+    }
+
+}
+
 
 void renderBoard(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    
     SDL_RenderClear(renderer);
     
     SDL_SetRenderDrawColor(renderer, 255,255,255,255);
-    SDL_RenderDrawLine(renderer, 0, 0, 0, 480);
-    SDL_RenderDrawLine(renderer, 0, 480, 480, 480);
+
     SDL_RenderDrawLine(renderer, 0, 480, 480, 480);
     SDL_RenderDrawLine(renderer, 480, 0, 480, 480);
     
@@ -86,13 +111,46 @@ void renderBoard(SDL_Renderer* renderer) {
     drawRectangle(renderer, 400, 320, 48, 48);
     // Red token
     SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
-
+    
     drawCircle(renderer, 32 + 48 / 2,32 + 48 / 2);
     drawCircle(renderer, 32 + 48 / 2, 112 + 48 / 2);
     drawCircle(renderer, 112 + 48 / 2, 32 + 48 / 2);
     drawCircle(renderer, 112 + 48 / 2, 112 + 48 / 2);
 
-    
+    //Triangles
+    //Red Triangle
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (x > 192 && y > x && (x + y) < 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
+
+    //Blue triangle
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (y > 192 && x > y && (x + y) < 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
+    //Yellow triangle
+    SDL_SetRenderDrawColor(renderer, 255,224 ,19, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (x < 288 && y < x && (x + y) > 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
+    //Green triangle
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (y < 288 && y > x && (x + y) > 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
 
     SDL_RenderPresent(renderer);
 }
