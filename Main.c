@@ -24,6 +24,9 @@ void drawCircle(SDL_Renderer* renderer, int centerX, int centerY)
 
 void renderBoard(SDL_Renderer* renderer) 
 {
+     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);//Black background
+    
+    SDL_RenderClear(renderer);
     //entry line red
     SDL_SetRenderDrawColor(renderer, 128, 0, 0, 255);
     drawRectangle(renderer, 32, 192, 32, 32);//single box
@@ -97,7 +100,49 @@ void renderBoard(SDL_Renderer* renderer)
     drawRectangle(renderer, 400, 400, 48, 48);
     drawRectangle(renderer, 400, 320, 48, 48);
     
-    // Render your Ludo board here
+    //Triangles
+    //Red Triangle
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (x > 192 && y > x && (x + y) < 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
+
+    //Blue triangle
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (y > 192 && x > y && (x + y) < 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
+    //Yellow triangle
+    SDL_SetRenderDrawColor(renderer, 255,224 ,19, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (x < 288 && y < x && (x + y) > 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
+    //Green triangle
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    for (int x = 0; x <= 640; x++) {
+        for (int y = 0; y <= 480; y++) {
+            if (y < 288 && y > x && (x + y) > 480)
+                SDL_RenderDrawPoint(renderer, x, y);
+        }
+    }
+    
+     // Red token
+    SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
+    
+    drawCircle(renderer, 32 + 48 / 2,32 + 48 / 2);
+    drawCircle(renderer, 32 + 48 / 2, 112 + 48 / 2);
+    drawCircle(renderer, 112 + 48 / 2, 32 + 48 / 2);
+    drawCircle(renderer, 112 + 48 / 2, 112 + 48 / 2);
+
 
     SDL_RenderPresent(renderer);
 }
