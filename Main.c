@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 typedef struct {
     int x;
@@ -39,8 +40,8 @@ void renderBoard(SDL_Renderer* renderer, Player players[4])
     
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);//Black background
-
     SDL_RenderClear(renderer);
+    
     //entry line red
     SDL_SetRenderDrawColor(renderer, 255, 12, 12, 255);
     drawRectangle(renderer, 32, 192, 32, 32);//single box
@@ -173,6 +174,33 @@ int rolldice() {
     return rand() % 6 + 1;
 }
 
+void movetokenfrominitial(Token *token,int player) {
+    if (player == 0) {
+        token->x =48 ;
+        token->y =208 ;
+    } else if (player == 1) {
+        token->x =272 ;
+        token->y = 48;
+    }else if (player == 2) {
+        token->x =208 ;
+        token->y =432 ;
+    }else if (player == 3) {
+        token->x =432 ;
+        token->y =272 ;
+    }
+}
+void moveToken(Token* token,int player,int dicenumber) {
+    
+    
+        if (((token->x > 0 && token->x < 32 * 5) || (token->x > 288 && token->x < 480 - 32)) && (token->y > 192 && token->y < 192 + 32)) {
+            token->x += 32;
+            dicenumber--;
+        }
+    
+
+    
+    
+}
 
 
 int main(int* argc,char * argv[])
@@ -191,8 +219,8 @@ int main(int* argc,char * argv[])
     Player players[4];
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            players[i].tokens[j].x = 56+!((i+1) % 2) * 288 + 80 * (!((j+1) % 2));
-            players[i].tokens[j].y = 56+288*((i+1)>2)+ 80*((j+1)>2); 
+            players[i].tokens[j].x = 56+(i % 2) * 288 + 80 * (j % 2);
+            players[i].tokens[j].y = 56+288*(i>1)+ 80*(j>1); 
         }
     }
     
@@ -206,6 +234,10 @@ int main(int* argc,char * argv[])
 
         while (SDL_PollEvent(&event))
         {
+            if (1) {
+                srand(time(NULL));
+                dicenumber = rolldice();
+            }
             if (event.type == SDL_QUIT)
             {
                 quit = 1;
@@ -214,7 +246,24 @@ int main(int* argc,char * argv[])
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     int x = event.button.x;
                     int y = event.button.y;
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 4; j++) {
+                            Token* token = &players[i].tokens[j];
+                            if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13*13) {
+                                printf("%d", dicenumber);
+                                if (players[i].tokens[j].x == 56 + (i % 2) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1) && dicenumber==6) {
+                                    movetokenfrominitial(token,i);
+                                }
+                                else {
+                                    moveToken(token, i, dicenumber);
+                                }
+                            }
+                                
+                            
+                        }
+                    }
 
+                    
                 }
 
 
