@@ -189,16 +189,111 @@ void movetokenfrominitial(Token *token,int player) {
         token->y =272 ;
     }
 }
+void movetokenfinal(Token* token, int player, int *dicenumber) {
+    while (*dicenumber != 0) {
+        if (player == 0) {
+            token->x += 32;
+            *dicenumber= *dicenumber-1;
+        } else if (player == 1) {
+            token->y += 32;
+
+        }
+    }
+}
 void moveToken(Token* token,int player,int dicenumber) {
-    
-    
-        if (((token->x > 0 && token->x < 32 * 5) || (token->x > 288 && token->x < 480 - 32)) && (token->y > 192 && token->y < 192 + 32)) {
+    while (dicenumber != 0) {
+        if ((token->x > 0 && token->x <192 && token->y > 192+32 && token->y < 192+64) && (player == 0)) {
+           
+                token->x += 32;
+                dicenumber--;
+                if (token->x > 192) {
+                    token->x = 520;
+                    break;
+                }
+        
+        } else if ((token->y > 0 && token->y < 192 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 1)) {
+
+            token->y += 32;
+            dicenumber--;
+            if (token->y > 192) {
+                token->x = 540;
+                break;
+            }
+        }else if ((token->y > 288 && token->y < 480 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 2)) {
+
+             token->y -= 32;
+             dicenumber--;
+             if (token->y < 288) {
+                 token->x = 560;
+                 break;
+             }
+        }
+        else if ((token->y > 192+32 && token->y < 192+64 && token->x > 288 && token->x < 480) && (player == 3)) {
+
+            token->x -= 32;
+            dicenumber--;
+            if (token->x < 288) {
+                token->x = 580;
+                break;
+            }
+        }
+        else if (((token->x > 0 && token->x < 32 * 5) || (token->x > 288 && token->x < 480 - 32)) && (token->y > 192 && token->y < 192 + 32)) {
             token->x += 32;
             dicenumber--;
         }
-    
+        else if (((token->x > 32 && token->x < 32 * 6) || (token->x > 288 + 32 && token->x < 480)) && (token->y > 192 + 64 && token->y < 192 + 96)) {
+            token->x -= 32;
+            dicenumber--;
 
-    
+        }
+        else if (((token->y > 32 && token->y < 192) || (token->y > 288 + 32 && token->y < 480)) && (token->x > 192 && token->x < 192 + 32)) {
+            token->y -= 32;
+            dicenumber--;
+
+        }
+        else if (((token->y > 0 && token->y < 192 - 32) || (token->y > 288 && token->y < 480 - 32)) && (token->x > 192 + 64 && token->x < 192 + 32 + 64)) {
+            token->y += 32;
+            dicenumber--;
+
+        }
+        else if ((token->x > 192 && token->x < 192 + 64) && (token->y > 0 & token->y < 32)) {
+            token->x += 32;
+            dicenumber--;
+        }
+        else if ((token->x > 192 + 32 && token->x < 192 + 96) && (token->y > 480 - 32 && token->y < 480)) {
+            token->x -= 32;
+            dicenumber--;
+        }
+        else if ((token->y > 192 + 32 && token->y < 192 + 96) && (token->x > 0 && token->x < 32)) {
+            token->y -= 32;
+            dicenumber--;
+        }
+        else if ((token->y > 192 && token->y < 192 + 64) && (token->x > 480 - 32 && token->x < 480)) {
+            token->y += 32;
+            dicenumber--;
+        }
+        else if (token->x == 32 * 5 + 16 && token->y == 192 + 16) {
+            token->y -= 32;
+            token->x += 32;
+            dicenumber--;
+        }
+        else if (token->x == 288 - 16 && token->y == 192 - 16) {
+            token->y += 32;
+            token->x += 32;
+            dicenumber--;
+        }
+        else if (token->x == 288 + 16 && token->y == 288 - 16) {
+            token->y += 32;
+            token->x -= 32;
+            dicenumber--;
+        }
+        else if (token->x == 192 + 16 && token->y == 288 + 16) {
+            token->y -= 32;
+            token->x -= 32;
+            dicenumber--;
+        }
+
+    }
     
 }
 
@@ -235,7 +330,7 @@ int main(int* argc,char * argv[])
         while (SDL_PollEvent(&event))
         {
             if (1) {
-                srand(time(NULL));
+                
                 dicenumber = rolldice();
             }
             if (event.type == SDL_QUIT)
@@ -251,12 +346,15 @@ int main(int* argc,char * argv[])
                             Token* token = &players[i].tokens[j];
                             if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13*13) {
                                 printf("%d", dicenumber);
-                                if (players[i].tokens[j].x == 56 + (i % 2) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1) && dicenumber==6) {
-                                    movetokenfrominitial(token,i);
+                                if (players[i].tokens[j].x == 56 + (i % 2) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1) ) {
+                                    if (dicenumber == 6) {
+                                        movetokenfrominitial(token, i);
+                                    }
                                 }
                                 else {
                                     moveToken(token, i, dicenumber);
                                 }
+                                break;
                             }
                                 
                             
