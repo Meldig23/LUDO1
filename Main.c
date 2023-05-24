@@ -155,8 +155,8 @@ void renderBoard(SDL_Renderer* renderer, Player players[4])
     for (int i = 0; i < 4; i++) {
         if (i == 0) SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
         if (i==1) SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);
-        if (i==2) SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);
-        if (i==3) SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
+        if (i==3) SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);
+        if (i==2) SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
         for (int j = 0; j < 4; j++) {
             drawCircle(renderer, players[i].tokens[j].x, players[i].tokens[j].y);
         }
@@ -181,37 +181,28 @@ void movetokenfrominitial(Token *token,int player) {
     } else if (player == 1) {
         token->x =272 ;
         token->y = 48;
-    }else if (player == 2) {
+    }else if (player == 3) {
         token->x =208 ;
         token->y =432 ;
-    }else if (player == 3) {
+    }else if (player == 2) {
         token->x =432 ;
         token->y =272 ;
     }
 }
-void movetokenfinal(Token* token, int player, int *dicenumber) {
-    while (*dicenumber != 0) {
-        if (player == 0) {
-            token->x += 32;
-            *dicenumber= *dicenumber-1;
-        } else if (player == 1) {
-            token->y += 32;
 
-        }
-    }
-}
 void moveToken(Token* token,int player,int dicenumber) {
     while (dicenumber != 0) {
-        if ((token->x > 0 && token->x <192 && token->y > 192+32 && token->y < 192+64) && (player == 0)) {
-           
-                token->x += 32;
-                dicenumber--;
-                if (token->x > 192) {
-                    token->x = 520;
-                    break;
-                }
-        
-        } else if ((token->y > 0 && token->y < 192 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 1)) {
+        if ((token->x > 0 && token->x < 192 && token->y > 192 + 32 && token->y < 192 + 64) && (player == 0)) {
+
+            token->x += 32;
+            dicenumber--;
+            if (token->x > 192) {
+                token->x = 520;
+                break;
+            }
+
+        }
+        else if ((token->y > 0 && token->y < 192 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 1)) {
 
             token->y += 32;
             dicenumber--;
@@ -219,16 +210,17 @@ void moveToken(Token* token,int player,int dicenumber) {
                 token->x = 540;
                 break;
             }
-        }else if ((token->y > 288 && token->y < 480 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 2)) {
-
-             token->y -= 32;
-             dicenumber--;
-             if (token->y < 288) {
-                 token->x = 560;
-                 break;
-             }
         }
-        else if ((token->y > 192+32 && token->y < 192+64 && token->x > 288 && token->x < 480) && (player == 3)) {
+        else if ((token->y > 288 && token->y < 480 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 3)) {
+
+            token->y -= 32;
+            dicenumber--;
+            if (token->y < 288) {
+                token->x = 560;
+                break;
+            }
+        }
+        else if ((token->y > 192 + 32 && token->y < 192 + 64 && token->x > 288 && token->x < 480) && (player == 2)) {
 
             token->x -= 32;
             dicenumber--;
@@ -292,7 +284,9 @@ void moveToken(Token* token,int player,int dicenumber) {
             token->x -= 32;
             dicenumber--;
         }
-
+        else {
+            break;
+        }
     }
     
 }
@@ -314,7 +308,8 @@ int main(int* argc,char * argv[])
     Player players[4];
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            players[i].tokens[j].x = 56+(i % 2) * 288 + 80 * (j % 2);
+
+            players[i].tokens[j].x = 56+(i >0 && i<3) * 288 + 80 * (j % 2);
             players[i].tokens[j].y = 56+288*(i>1)+ 80*(j>1); 
         }
     }
@@ -324,6 +319,7 @@ int main(int* argc,char * argv[])
     SDL_Event event = { 0 };
     int quit = 0;
     int dicenumber=0;
+    int playerturn = 0;
     while (!quit)
     {
 
@@ -341,25 +337,41 @@ int main(int* argc,char * argv[])
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     int x = event.button.x;
                     int y = event.button.y;
-                    for (int i = 0; i < 4; i++) {
+                    int i = playerturn;
                         for (int j = 0; j < 4; j++) {
                             Token* token = &players[i].tokens[j];
                             if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13*13) {
                                 printf("%d", dicenumber);
-                                if (players[i].tokens[j].x == 56 + (i % 2) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1) ) {
+                                if (players[i].tokens[j].x == 56 + (i >0 && i<3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1) ) {
                                     if (dicenumber == 6) {
                                         movetokenfrominitial(token, i);
+                                    }
+                                    else {
+                                        if (playerturn == 3) {
+                                            playerturn = 0;
+                                        }
+                                        else {
+                                            playerturn++;
+                                        }
                                     }
                                 }
                                 else {
                                     moveToken(token, i, dicenumber);
+                                    if (dicenumber != 6) {
+                                        if (playerturn == 3) {
+                                            playerturn = 0;
+                                        }
+                                        else {
+                                            playerturn++;
+                                        }
+                                    }
                                 }
                                 break;
                             }
                                 
                             
                         }
-                    }
+                    
 
                     
                 }
@@ -382,4 +394,6 @@ int main(int* argc,char * argv[])
     return 0;
 
 }
+
+
 
