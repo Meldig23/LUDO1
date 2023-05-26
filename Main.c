@@ -6,6 +6,7 @@
 typedef struct {
     int x;
     int y;
+    
 } Token;
 
 typedef struct {
@@ -19,9 +20,9 @@ void drawRectangle(SDL_Renderer* renderer, int x, int y, int width, int height)
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void drawCircle(SDL_Renderer* renderer, int centerX, int centerY)
+void drawCircle(SDL_Renderer* renderer, int centerX, int centerY,int radius)
 {
-    int radius = 13;
+    
 
     for (int y = -radius; y <= radius; ++y)
     {
@@ -35,16 +36,62 @@ void drawCircle(SDL_Renderer* renderer, int centerX, int centerY)
     }
 }
 
-void renderBoard(SDL_Renderer* renderer, Player players[4])
+drawnumberondice(SDL_Renderer* renderer,int dicenumber) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    if (dicenumber == 1) {
+        
+        drawCircle(renderer,560, 405, 8);
+    }
+    if (dicenumber == 2) {
+
+        drawCircle(renderer, 552, 393, 6);
+        drawCircle(renderer, 568, 413, 6);
+    }
+    if (dicenumber == 3) {
+
+        drawCircle(renderer, 560-15, 405-15, 6);
+        drawCircle(renderer, 535+25, 380+25, 6);
+        drawCircle(renderer, 560 + 15, 405 + 15, 6);
+    }
+    if (dicenumber == 4) {
+
+        drawCircle(renderer, 560-12, 405-12, 6);
+        drawCircle(renderer, 560-12, 405+12, 6);
+        drawCircle(renderer, 560+12, 405-12, 6);
+        drawCircle(renderer, 560+12, 405+12, 6);
+    }
+    if (dicenumber == 5) {
+        drawCircle(renderer, 560 - 13, 405 - 13, 6);
+        drawCircle(renderer, 560 - 13, 405 + 13, 6);
+        drawCircle(renderer, 560 + 13, 405 - 13, 6);
+        drawCircle(renderer, 560 + 13, 405 + 13, 6);
+        drawCircle(renderer, 560, 405, 6);
+    }
+    if (dicenumber == 6) {
+
+        drawCircle(renderer, 560-13, 405-15, 6);
+        drawCircle(renderer, 560-13, 405+15, 6);
+        drawCircle(renderer, 560-13, 405, 6);
+        drawCircle(renderer, 560+13, 405-15, 6);
+        drawCircle(renderer, 560+13, 405+15, 6);
+        drawCircle(renderer, 560+13, 405, 6);
+    }
+}
+
+void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber)
 {   
     
-
+    
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);//Black background
     SDL_RenderClear(renderer);
-    
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    drawRectangle(renderer, 535, 380, 50, 50);//Dice
+    SDL_Delay(250);
+    drawnumberondice(renderer,dicenumber);
     //entry line red
     SDL_SetRenderDrawColor(renderer, 255, 12, 12, 255);
     drawRectangle(renderer, 32, 192, 32, 32);//single box
+ 
     drawRectangle(renderer, 32, 224, 160, 32);//long box
     //entry line blue
     SDL_SetRenderDrawColor(renderer, 50, 10, 255, 255);
@@ -158,7 +205,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4])
         if (i==3) SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);
         if (i==2) SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
         for (int j = 0; j < 4; j++) {
-            drawCircle(renderer, players[i].tokens[j].x, players[i].tokens[j].y);
+            drawCircle(renderer, players[i].tokens[j].x, players[i].tokens[j].y,13);
         }
     }
     
@@ -171,6 +218,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4])
 }
 
 int rolldice() {
+    srand(time(NULL));
     return rand() % 6 + 1;
 }
 
@@ -311,6 +359,7 @@ int main(int* argc,char * argv[])
 
             players[i].tokens[j].x = 56+(i >0 && i<3) * 288 + 80 * (j % 2);
             players[i].tokens[j].y = 56+288*(i>1)+ 80*(j>1); 
+            
         }
     }
     
@@ -320,15 +369,16 @@ int main(int* argc,char * argv[])
     int quit = 0;
     int dicenumber=0;
     int playerturn = 0;
+    double angle = 0;
+    Token diceposition = { 535,380 };
+    
     while (!quit)
     {
 
+
         while (SDL_PollEvent(&event))
         {
-            if (1) {
-                
-                dicenumber = rolldice();
-            }
+            
             if (event.type == SDL_QUIT)
             {
                 quit = 1;
@@ -338,13 +388,33 @@ int main(int* argc,char * argv[])
                     int x = event.button.x;
                     int y = event.button.y;
                     int i = playerturn;
-                        for (int j = 0; j < 4; j++) {
+                    
+                    if (x >= diceposition.x && x <= diceposition.x + 50 && y >= diceposition.y && y <= diceposition.y + 50) {
+
+                        dicenumber = rolldice();
+                        printf("%d\n", dicenumber);
+                    }
+                    
+                    
+                    for (int j = 0; j < 4; j++) {
+                            
                             Token* token = &players[i].tokens[j];
                             if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13*13) {
-                                printf("%d", dicenumber);
+                                
                                 if (players[i].tokens[j].x == 56 + (i >0 && i<3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1) ) {
-                                    if (dicenumber == 6) {
+                                    if (dicenumber == 6 ) {
                                         movetokenfrominitial(token, i);
+                                        dicenumber = 0;
+                                    }
+                                    else if (dicenumber == 1) {
+                                        movetokenfrominitial(token, i);
+                                        dicenumber = 0;
+                                        if (playerturn == 3) {
+                                            playerturn = 0;
+                                        }
+                                        else {
+                                            playerturn++;
+                                        }
                                     }
                                     else {
                                         if (playerturn == 3) {
@@ -357,7 +427,8 @@ int main(int* argc,char * argv[])
                                 }
                                 else {
                                     moveToken(token, i, dicenumber);
-                                    if (dicenumber != 6) {
+                                    //checkcollision(token, i);
+                                    if (dicenumber != 6 && dicenumber!=0) {
                                         if (playerturn == 3) {
                                             playerturn = 0;
                                         }
@@ -365,12 +436,15 @@ int main(int* argc,char * argv[])
                                             playerturn++;
                                         }
                                     }
+                                    dicenumber = 0;
+                                    
                                 }
                                 break;
                             }
+                            
                                 
                             
-                        }
+                    }
                     
 
                     
@@ -381,8 +455,10 @@ int main(int* argc,char * argv[])
 
             }
         }
+        
 
-        renderBoard(renderer, players);
+        
+        renderBoard(renderer, players,dicenumber);
     }
 
     
