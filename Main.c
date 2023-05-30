@@ -232,7 +232,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int pl
     SDL_RenderPresent(renderer);
     if (checkwin(players,playerturn)==4) {
         
-        SDL_Delay(150);
+        SDL_Delay(500);
         if (playerturn == 0) {
             SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
         }
@@ -389,44 +389,46 @@ void nextplayerturn(int* playerturn) {
 
 int checkCollision(Player players[4], Token* token, int playerturn) {
     int counter = 0;
+    if (token->x == 48 && token->y == 208) {
+        counter -= 1;
+        
+    }
+    else if (token->x == 272 && token->y == 48) {
+        counter -= 1;
+        
+    }
+    else if (token->x == 432 && token->y == 272) {
+        counter -= 1;
+        
+    }
+    else if (token->x == 208 && token->y == 432) {
+        counter -= 1;
+        
 
-    for (int l = 0; l < 4; l++) {
-        Player* otherPlayer = &players[l];
-        if (l != playerturn) {
-            for (int n = 0; n < 4; n++) {
-                Token* otherToken = &otherPlayer->tokens[n];
-                if (l == 0 && otherToken->x == 48 && otherToken->y == 208) {
-                    counter -= 1;
-                    break;
-                }
-                else if (l == 1 && otherToken->x == 272 && otherToken->y == 48) {
-                    counter -= 1;
-                    break;
-                }
-                else if (l == 2 && otherToken->x == 432 && otherToken->y == 272) {
-                    counter -= 1;
-                    break;
-                }
-                else if (l == 3 && otherToken->x == 208 && otherToken->y == 432) {
-                    counter -= 1;
-                    break;
+    }
+    if (counter >= 0) {
+        for (int l = 0; l < 4; l++) {
+            Player* otherPlayer = &players[l];
+            if (l != playerturn) {
 
-                }
-            }
-            if (counter == 0) {
+
                 for (int m = 0; m < 4; m++) {
                     Token* otherToken = &otherPlayer->tokens[m];
+                    //printf("Other Player %d Token %d\n", l, m);
+                    //printf("Entered loop %d Otherplayer token %d\n", token->x,otherToken->x);
                     if (otherToken->x == token->x && otherToken->y == token->y) {
                         otherToken->x = 56 + (l > 0 && l < 3) * 288 + 80 * (m % 2);
                         otherToken->y = 56 + 288 * (l > 1) + 80 * (m > 1);
                         counter += 1;
                     }
                 }
+
             }
+
         }
-        if (counter == 0 || counter == -1) return 0;
-        else return 1;
     }
+    if (counter <=0) return 0;
+    else return 1;
 }
 int checkwin(Player players[], int playerturn) {
     int c = 0;
@@ -492,9 +494,10 @@ int main(int* argc,char * argv[])
                         printf("Player %d turn\n", playerturn+1);
                         dicenumber = rolldice();
                         printf("%d\n", dicenumber);
+                        printf("%d\n", dicenumber);
                         
                         for (int j = 0; j < 4; j++) {
-                            if ((players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) || (players[i].tokens[j].x == 512+32*i && players[i].tokens[j].y== 192+35*j) ){
+                            if ((players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) || (players[i].tokens[j].x == 512 + 32 * i && players[i].tokens[j].y == 192 + 35 * j)){
                                 c += 1;
                             }
                             
@@ -537,9 +540,10 @@ int main(int* argc,char * argv[])
                                             break;
 
                                         }
-                                        if ((checkCollision(players, token, playerturn) == 0) && dicenumber != 6 ) {
-                                            nextplayerturn(&playerturn);
-
+                                        if (!(checkCollision(players, token, playerturn))  ) {
+                                            if (dicenumber != 6) {
+                                                nextplayerturn(&playerturn);
+                                            }
                                         } 
 
                                         dicenumber = 0;
@@ -572,6 +576,7 @@ int main(int* argc,char * argv[])
             dicenumber = 0;
             SDL_Delay(50);
         }
+        if (checkwin(players, playerturn)) break;
         
         
     }
