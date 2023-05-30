@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include <stdlib.h>
+
 #include <stdio.h>
 #include <time.h>
 
@@ -101,6 +101,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int pl
     if (playerturn == 2) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
     }
+    
     drawRectangle(renderer,535, 50, 50, 50);
     //entry line red
     SDL_SetRenderDrawColor(renderer, 255, 12, 12, 255);
@@ -212,7 +213,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int pl
     }
 
     //tokens
-    
+    SDL_Delay(100);
     for (int i = 0; i < 4; i++) {
         if (i == 0) SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
         if (i==1) SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);
@@ -225,10 +226,29 @@ void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int pl
     
     
 
-
+    
     
 
     SDL_RenderPresent(renderer);
+    if (checkwin(players,playerturn)==4) {
+        
+        SDL_Delay(150);
+        if (playerturn == 0) {
+            SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
+        }
+        if (playerturn == 1) {
+            SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);
+        }
+        if (playerturn == 3) {
+            SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);
+        }
+        if (playerturn == 2) {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
+        }
+
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+    }
 }
 
 int rolldice() {
@@ -243,12 +263,13 @@ void movetokenfrominitial(Token *token,int player) {
     } else if (player == 1) {
         token->x =272 ;
         token->y = 48;
-    }else if (player == 3) {
-        token->x =208 ;
-        token->y =432 ;
     }else if (player == 2) {
         token->x =432 ;
         token->y =272 ;
+    }
+    else if (player == 3) {
+        token->x = 208;
+        token->y = 432;
     }
 }
 
@@ -372,18 +393,47 @@ int checkCollision(Player players[4], Token* token, int playerturn) {
     for (int l = 0; l < 4; l++) {
         Player* otherPlayer = &players[l];
         if (l != playerturn) {
-            for (int m = 0; m < 4; m++) {
-                Token* otherToken = &otherPlayer->tokens[m];
-                if (otherToken->x == token->x && otherToken->y == token->y) {
-                    otherToken->x = 56 + (l > 0 && l < 3) * 288 + 80 * (m % 2);
-                    otherToken->y = 56 + 288 * (l > 1) + 80 * (m > 1);
-                    counter += 1;
+            for (int n = 0; n < 4; n++) {
+                Token* otherToken = &otherPlayer->tokens[n];
+                if (l == 0 && otherToken->x == 48 && otherToken->y == 208) {
+                    counter -= 1;
+                    break;
+                }
+                else if (l == 1 && otherToken->x == 272 && otherToken->y == 48) {
+                    counter -= 1;
+                    break;
+                }
+                else if (l == 2 && otherToken->x == 432 && otherToken->y == 272) {
+                    counter -= 1;
+                    break;
+                }
+                else if (l == 3 && otherToken->x == 208 && otherToken->y == 432) {
+                    counter -= 1;
+                    break;
+
+                }
+            }
+            if (counter == 0) {
+                for (int m = 0; m < 4; m++) {
+                    Token* otherToken = &otherPlayer->tokens[m];
+                    if (otherToken->x == token->x && otherToken->y == token->y) {
+                        otherToken->x = 56 + (l > 0 && l < 3) * 288 + 80 * (m % 2);
+                        otherToken->y = 56 + 288 * (l > 1) + 80 * (m > 1);
+                        counter += 1;
+                    }
                 }
             }
         }
+        if (counter == 0 || counter == -1) return 0;
+        else return 1;
     }
-    if (counter == 0) return 0;
-    else return 1;
+}
+int checkwin(Player players[], int playerturn) {
+    int c = 0;
+    for (int j = 0; j < 4; j++) {
+        if (players[playerturn].tokens[j].x == 512 + 32 * playerturn && players[playerturn].tokens[j].y == 192 + 35 * j) c += 1;
+    }
+    return c;
 }
 
 
@@ -444,21 +494,21 @@ int main(int* argc,char * argv[])
                         printf("%d\n", dicenumber);
                         
                         for (int j = 0; j < 4; j++) {
-                            if (players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) {
+                            if ((players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) || (players[i].tokens[j].x == 512+32*i && players[i].tokens[j].y== 192+35*j) ){
                                 c += 1;
                             }
                             
                         }
                         if (c == 4 && dicenumber != 6) {
                             nextplayerturn(&playerturn);
-                            dicenumber = 0;
-                            // not to be done if other statement uncommented
-                            /*skipturn = 1;*/
+                            
+                            
+                            skipturn = 1;
                             c = 0;
                         }
-                        /*else {
+                        else {
                             skipturn = 0;
-                        }*/
+                        }
                         
                     }
 
@@ -468,40 +518,40 @@ int main(int* argc,char * argv[])
                     for (int j = 0; j < 4; j++) {
                         
                             Token* token = &players[i].tokens[j];
+                            if (dicenumber != 0) {
+                                if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13 * 13) {
 
-                            if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13*13) {
-                                
-                                if (players[i].tokens[j].x == 56 + (i >0 && i<3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1) ) {
-                                    if (dicenumber == 6 ) {
-                                        movetokenfrominitial(token, i);
-                                        dicenumber = 0;
+                                    if (players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) {
+                                        if (dicenumber == 6) {
+                                            movetokenfrominitial(token, i);
+                                            dicenumber = 0;
+                                        }
+
+                                       
+                                        c = 0;
                                     }
-                                    
                                     else {
-                                        nextplayerturn(&playerturn);
+                                        moveToken(token, i, dicenumber, j);
+                                        if (checkwin(players, playerturn)==4) {
+                                            
+                                            break;
+
+                                        }
+                                        if ((checkCollision(players, token, playerturn) == 0) && dicenumber != 6 ) {
+                                            nextplayerturn(&playerturn);
+
+                                        } 
+
                                         dicenumber = 0;
-                                        
+                                        c = 0;
+
                                     }
-                                    c = 0;
+
+
+                                    break;
                                 }
-                                else {
-                                    moveToken(token, i, dicenumber,j);
-                                    
-                                    if ((checkCollision(players, token, playerturn)==0) && dicenumber!=6) {
-                                        nextplayerturn(&playerturn);
-                                        
-                                    }
-                                    
-                                    dicenumber = 0;
-                                    c = 0;
-                  
-                                }
-                                    
-                                
-                                break;
+
                             }
-                            
-                                
                             
                     }
                     
@@ -518,11 +568,11 @@ int main(int* argc,char * argv[])
         
         
         renderBoard(renderer, players,dicenumber,playerturn);
-        /*if (skipturn == 1) {
+        if (skipturn == 1) {
             dicenumber = 0;
-            SDL_Delay(100);
+            SDL_Delay(50);
         }
-        */
+        
         
     }
 
