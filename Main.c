@@ -6,23 +6,23 @@
 typedef struct {
     int x;
     int y;
-    
-} Token;
+
+} Token;//coordinates of tokens are stored
 
 typedef struct {
     Token tokens[4];
-    
-} Player;
 
-void drawRectangle(SDL_Renderer* renderer, int x, int y, int width, int height)
+} Player;//stores an array of token types of each player
+
+void drawRectangle(SDL_Renderer* renderer, int x, int y, int width, int height)//fn to draw rect
 {
     SDL_Rect rect = { x, y, width, height };
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void drawCircle(SDL_Renderer* renderer, int centerX, int centerY,int radius)
+void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius)//fn to draw a circle using points
 {
-    
+
 
     for (int y = -radius; y <= radius; ++y)
     {
@@ -36,11 +36,12 @@ void drawCircle(SDL_Renderer* renderer, int centerX, int centerY,int radius)
     }
 }
 
-void drawnumberondice(SDL_Renderer* renderer,int dicenumber) {
+void drawnumberondice(SDL_Renderer* renderer, int dicenumber) //fn to print the dots on the dice using the above circle fn
+{
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     if (dicenumber == 1) {
-        
-        drawCircle(renderer,560, 405, 8);
+
+        drawCircle(renderer, 560, 405, 8);
     }
     else if (dicenumber == 2) {
 
@@ -49,16 +50,16 @@ void drawnumberondice(SDL_Renderer* renderer,int dicenumber) {
     }
     else if (dicenumber == 3) {
 
-        drawCircle(renderer, 560-15, 405-15, 6);
-        drawCircle(renderer, 535+25, 380+25, 6);
+        drawCircle(renderer, 560 - 15, 405 - 15, 6);
+        drawCircle(renderer, 535 + 25, 380 + 25, 6);
         drawCircle(renderer, 560 + 15, 405 + 15, 6);
     }
     else if (dicenumber == 4) {
 
-        drawCircle(renderer, 560-12, 405-12, 6);
-        drawCircle(renderer, 560-12, 405+12, 6);
-        drawCircle(renderer, 560+12, 405-12, 6);
-        drawCircle(renderer, 560+12, 405+12, 6);
+        drawCircle(renderer, 560 - 12, 405 - 12, 6);
+        drawCircle(renderer, 560 - 12, 405 + 12, 6);
+        drawCircle(renderer, 560 + 12, 405 - 12, 6);
+        drawCircle(renderer, 560 + 12, 405 + 12, 6);
     }
     else if (dicenumber == 5) {
         drawCircle(renderer, 560 - 13, 405 - 13, 6);
@@ -69,44 +70,45 @@ void drawnumberondice(SDL_Renderer* renderer,int dicenumber) {
     }
     else if (dicenumber == 6) {
 
-        drawCircle(renderer, 560-13, 405-15, 6);
-        drawCircle(renderer, 560-13, 405+15, 6);
-        drawCircle(renderer, 560-13, 405, 6);
-        drawCircle(renderer, 560+13, 405-15, 6);
-        drawCircle(renderer, 560+13, 405+15, 6);
-        drawCircle(renderer, 560+13, 405, 6);
+        drawCircle(renderer, 560 - 13, 405 - 15, 6);
+        drawCircle(renderer, 560 - 13, 405 + 15, 6);
+        drawCircle(renderer, 560 - 13, 405, 6);
+        drawCircle(renderer, 560 + 13, 405 - 15, 6);
+        drawCircle(renderer, 560 + 13, 405 + 15, 6);
+        drawCircle(renderer, 560 + 13, 405, 6);
     }
 }
 
-void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int playerturn)
-{   
-    
-    
+void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int playerturn)//the different components of the board are drawn using different parts of the fn 
+{
+
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);//Black background
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     drawRectangle(renderer, 535, 380, 50, 50);//Dice
 
-    drawnumberondice(renderer,dicenumber);
+    drawnumberondice(renderer, dicenumber);
 
+    //colour for player turn
     if (playerturn == 0) {
-        SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
+        SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);//red
     }
     if (playerturn == 1) {
-        SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);
+        SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);//blue
     }
     if (playerturn == 3) {
-        SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);
+        SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);//green
     }
     if (playerturn == 2) {
-        SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);//yellow
     }
-    
-    drawRectangle(renderer,535, 50, 50, 50);
+
+    drawRectangle(renderer, 535, 50, 50, 50);//rectangle for player turn
     //entry line red
     SDL_SetRenderDrawColor(renderer, 255, 12, 12, 255);
     drawRectangle(renderer, 32, 192, 32, 32);//single box
- 
+
     drawRectangle(renderer, 32, 224, 160, 32);//long box
     //entry line blue
     SDL_SetRenderDrawColor(renderer, 50, 10, 255, 255);
@@ -123,6 +125,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int pl
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White color
 
+    //remainig lines to complete the board 
     SDL_RenderDrawLine(renderer, 480, 0, 480, 480);
 
     SDL_RenderDrawLine(renderer, 192, 0, 192, 480);
@@ -215,23 +218,23 @@ void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int pl
     //tokens
     SDL_Delay(100);
     for (int i = 0; i < 4; i++) {
-        if (i == 0) SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
-        if (i==1) SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);
-        if (i==3) SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);
-        if (i==2) SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
+        if (i == 0) SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);//red
+        if (i == 1) SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);//blue
+        if (i == 3) SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);//green
+        if (i == 2) SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);//yellow
         for (int j = 0; j < 4; j++) {
-            drawCircle(renderer, players[i].tokens[j].x, players[i].tokens[j].y,13);
+            drawCircle(renderer, players[i].tokens[j].x, players[i].tokens[j].y, 13);
         }
     }
-    
-    
 
-    
-    
+
+
+
+
 
     SDL_RenderPresent(renderer);
-    if (checkwin(players,playerturn)==4) {
-        
+    if (checkwin(players, playerturn) == 4) {// winner colour declaration
+
         SDL_Delay(500);
         if (playerturn == 0) {
             SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
@@ -251,36 +254,38 @@ void renderBoard(SDL_Renderer* renderer, Player players[4],int dicenumber,int pl
     }
 }
 
-int rolldice() {
+int rolldice() {//returns a random no for dice
     srand(time(NULL));
     return rand() % 6 + 1;
 }
 
-void movetokenfrominitial(Token *token,int player) {
-    if (player == 0) {
-        token->x =48 ;
-        token->y =208 ;
-    } else if (player == 1) {
-        token->x =272 ;
-        token->y = 48;
-    }else if (player == 2) {
-        token->x =432 ;
-        token->y =272 ;
+void movetokenfrominitial(Token* token, int player) {//fn to move the token from the home box to the respective start
+    if (player == 0) {//red
+        token->x = 48;
+        token->y = 208;
     }
-    else if (player == 3) {
+    else if (player == 1) {//blue
+        token->x = 272;
+        token->y = 48;
+    }
+    else if (player == 2) {//yellow
+        token->x = 432;
+        token->y = 272;
+    }
+    else if (player == 3) {//green
         token->x = 208;
         token->y = 432;
     }
 }
 
-void moveToken(Token* token,int player,int dicenumber,int tokenno) {
+void moveToken(Token* token, int player, int dicenumber, int tokenno) {//moving the tokens throughout the board
     while (dicenumber != 0) {
         if ((token->x > 0 && token->x < 192 && token->y > 192 + 32 && token->y < 192 + 64) && (player == 0)) {
 
             token->x += 32;
             dicenumber--;
             if (token->x > 192) {
-                token->x = 480+32;
+                token->x = 480 + 32;
                 token->y = 192 + 35 * tokenno;
                 break;
             }
@@ -291,7 +296,7 @@ void moveToken(Token* token,int player,int dicenumber,int tokenno) {
             token->y += 32;
             dicenumber--;
             if (token->y > 192) {
-                token->x = 480+64;
+                token->x = 480 + 64;
                 token->y = 192 + 35 * tokenno;
                 break;
             }
@@ -301,7 +306,7 @@ void moveToken(Token* token,int player,int dicenumber,int tokenno) {
             token->y -= 32;
             dicenumber--;
             if (token->y < 288) {
-                token->x = 480+96;
+                token->x = 480 + 96;
                 token->y = 192 + 35 * tokenno;
                 break;
             }
@@ -311,7 +316,7 @@ void moveToken(Token* token,int player,int dicenumber,int tokenno) {
             token->x -= 32;
             dicenumber--;
             if (token->x < 288) {
-                token->x = 480+128;
+                token->x = 480 + 128;
                 token->y = 192 + 35 * tokenno;
                 break;
             }
@@ -375,37 +380,39 @@ void moveToken(Token* token,int player,int dicenumber,int tokenno) {
             break;
         }
     }
-    
+
 }
 
-void nextplayerturn(int* playerturn) {
+void nextplayerturn(int* playerturn) {//deciding wo plays next
     if (*playerturn == 3) {
         *playerturn = 0;
     }
     else {
-        *playerturn=*playerturn+1;
+        *playerturn = *playerturn + 1;
     }
 }
 
-int checkCollision(Player players[4], Token* token, int playerturn) {
+int checkCollision(Player players[4], Token* token, int playerturn) {// killing 
     int counter = 0;
+    //safe homes
     if (token->x == 48 && token->y == 208) {
         counter -= 1;
-        
+
     }
     else if (token->x == 272 && token->y == 48) {
         counter -= 1;
-        
+
     }
     else if (token->x == 432 && token->y == 272) {
         counter -= 1;
-        
+
     }
     else if (token->x == 208 && token->y == 432) {
         counter -= 1;
-        
+
 
     }
+    //killing
     if (counter >= 0) {
         for (int l = 0; l < 4; l++) {
             Player* otherPlayer = &players[l];
@@ -427,10 +434,10 @@ int checkCollision(Player players[4], Token* token, int playerturn) {
 
         }
     }
-    if (counter <=0) return 0;
+    if (counter <= 0) return 0;
     else return 1;
 }
-int checkwin(Player players[], int playerturn) {
+int checkwin(Player players[], int playerturn) {//checking if a player has won
     int c = 0;
     for (int j = 0; j < 4; j++) {
         if (players[playerturn].tokens[j].x == 512 + 32 * playerturn && players[playerturn].tokens[j].y == 192 + 35 * j) c += 1;
@@ -439,129 +446,130 @@ int checkwin(Player players[], int playerturn) {
 }
 
 
-int main(int* argc,char * argv[])
+int main(int* argc, char* argv[])
 {
-    SDL_Window* window = NULL;
-    SDL_Renderer* renderer = NULL;
+    SDL_Window* window = NULL;// initialising window 
+    SDL_Renderer* renderer = NULL;// initialising renderer
 
 
 
     SDL_Init(SDL_INIT_VIDEO);
 
-    window = SDL_CreateWindow("Ludo Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    window = SDL_CreateWindow("Ludo Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);//creating window
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);//creating renderer
 
-    
+
     Player players[4];
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
 
-            players[i].tokens[j].x = 56+(i >0 && i<3) * 288 + 80 * (j % 2);
-            players[i].tokens[j].y = 56+288*(i>1)+ 80*(j>1); 
-            
+            players[i].tokens[j].x = 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2);
+            players[i].tokens[j].y = 56 + 288 * (i > 1) + 80 * (j > 1);
+
         }
     }
-    
-    
-    
+
+
+    //initialising all the parameters to 0
+
     SDL_Event event = { 0 };
     int quit = 0;
-    int dicenumber=0;
+    int dicenumber = 0;
     int playerturn = 0;
     double angle = 0;
     Token diceposition = { 535,380 };
-    int c=0;
+    int c = 0;
     int skipturn = 0;
-    while (!quit)
+    while (!quit)//while the game has not stopped
     {
 
 
         while (SDL_PollEvent(&event))
         {
-            
+
             if (event.type == SDL_QUIT)
             {
-                quit = 1;
+                quit = 1;//stop game
             }
-            else if (event.type == SDL_MOUSEBUTTONDOWN) {
+            else if (event.type == SDL_MOUSEBUTTONDOWN) {// game continues
                 if (event.button.button == SDL_BUTTON_LEFT) {
-                    int x = event.button.x;
+                    int x = event.button.x;//gets the coordinates of the clicked token 
                     int y = event.button.y;
                     int i = playerturn;
-                    
-                    if (x >= diceposition.x && x <= diceposition.x + 50 && y >= diceposition.y && y <= diceposition.y + 50 && dicenumber==0) {
 
-                        printf("Player %d turn\n", playerturn+1);
+                    if (x >= diceposition.x && x <= diceposition.x + 50 && y >= diceposition.y && y <= diceposition.y + 50 && dicenumber == 0) {
+
+                        printf("Player %d turn\n", playerturn + 1);
                         dicenumber = rolldice();
                         printf("%d\n", dicenumber);
                         printf("%d\n", dicenumber);
-                        
-                        for (int j = 0; j < 4; j++) {
-                            if ((players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) || (players[i].tokens[j].x == 512 + 32 * i && players[i].tokens[j].y == 192 + 35 * j)){
+
+                        for (int j = 0; j < 4; j++) {//checks if the token are in the home box
+                            if ((players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) || (players[i].tokens[j].x == 512 + 32 * i && players[i].tokens[j].y == 192 + 35 * j)) {
                                 c += 1;
                             }
-                            
+
                         }
-                        if (c == 4 && dicenumber != 6) {
+                        if (c == 4 && dicenumber != 6) {// skips turn in the beggning if we dont get 6
                             nextplayerturn(&playerturn);
-                            
-                            
+
+
                             skipturn = 1;
                             c = 0;
                         }
                         else {
                             skipturn = 0;
                         }
-                        
+
                     }
 
-                    
 
-                    
+
+
                     for (int j = 0; j < 4; j++) {
-                        
-                            Token* token = &players[i].tokens[j];
-                            if (dicenumber != 0) {
-                                if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13 * 13) {
 
-                                    if (players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) {
-                                        if (dicenumber == 6) {
-                                            movetokenfrominitial(token, i);
-                                            dicenumber = 0;
-                                        }
+                        Token* token = &players[i].tokens[j];
+                        if (dicenumber != 0) {
+                            if (pow(x - token->x, 2) + pow(y - token->y, 2) <= 13 * 13) {
 
-                                       
-                                        c = 0;
-                                    }
-                                    else {
-                                        moveToken(token, i, dicenumber, j);
-                                        if (checkwin(players, playerturn)==4) {
-                                            
-                                            break;
-
-                                        }
-                                        if (!(checkCollision(players, token, playerturn))  ) {
-                                            if (dicenumber != 6) {
-                                                nextplayerturn(&playerturn);
-                                            }
-                                        } 
-
+                                if (players[i].tokens[j].x == 56 + (i > 0 && i < 3) * 288 + 80 * (j % 2) && players[i].tokens[j].y == 56 + 288 * (i > 1) + 80 * (j > 1)) {
+                                    if (dicenumber == 6) {
+                                        movetokenfrominitial(token, i);//bring out the token
                                         dicenumber = 0;
-                                        c = 0;
-
                                     }
 
 
-                                    break;
+                                    c = 0;
+                                }
+                                else {
+                                    moveToken(token, i, dicenumber, j);//movement of token
+                                    if (checkwin(players, playerturn) == 4) {
+
+                                        break;
+
+                                    }
+                                    if (!(checkCollision(players, token, playerturn))) {//killing rules
+                                        if (dicenumber != 6) {
+                                            nextplayerturn(&playerturn);
+                                        }
+                                    }
+
+                                    dicenumber = 0;
+                                    c = 0;
+
                                 }
 
-                            }
-                            
-                    }
-                    
-                    
 
-                    
+                                break;
+                            }
+
+                        }
+
+                    }
+
+
+
+
                 }
 
 
@@ -569,27 +577,24 @@ int main(int* argc,char * argv[])
 
             }
         }
-        
-        
-        renderBoard(renderer, players,dicenumber,playerturn);
+
+
+        renderBoard(renderer, players, dicenumber, playerturn);//render the board
         if (skipturn == 1) {
             dicenumber = 0;
             SDL_Delay(50);
         }
-        if (checkwin(players, playerturn)) break;
-        
-        
+        if (checkwin(players, playerturn)) break;//if player wins stop
+
+
     }
 
-    
 
+    //post game destroying
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    
+
     return 0;
 
 }
-
-
-
