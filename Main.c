@@ -1,5 +1,5 @@
 #include <SDL.h>
-
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -92,34 +92,34 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
 
     //colour for player turn
     if (playerturn == 0) {
-        SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);//red
+        SDL_SetRenderDrawColor(renderer, 236, 70, 50, 255);//red
     }
     if (playerturn == 1) {
-        SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);//blue
-    }
-    if (playerturn == 3) {
-        SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);//green
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);//blue
     }
     if (playerturn == 2) {
-        SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);//yellow
+        SDL_SetRenderDrawColor(renderer, 255, 224, 19, 255); // yellow
+    }
+    if (playerturn == 3) {
+        SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);//green
     }
 
     drawRectangle(renderer, 535, 50, 50, 50);//rectangle for player turn
     //entry line red
-    SDL_SetRenderDrawColor(renderer, 255, 12, 12, 255);
+    SDL_SetRenderDrawColor(renderer, 204, 0, 0, 255);
     drawRectangle(renderer, 32, 192, 32, 32);//single box
 
     drawRectangle(renderer, 32, 224, 160, 32);//long box
     //entry line blue
-    SDL_SetRenderDrawColor(renderer, 50, 10, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 128, 255);
     drawRectangle(renderer, 224, 32, 32, 160);//long box
     drawRectangle(renderer, 256, 32, 32, 32);//single box
     //entry line yellow
-    SDL_SetRenderDrawColor(renderer, 255, 224, 19, 255);
+    SDL_SetRenderDrawColor(renderer, 193, 150, 19, 255);
     drawRectangle(renderer, 288, 224, 160, 32);//long box
     drawRectangle(renderer, 416, 256, 32, 32);//single box
     //entry line green
-    SDL_SetRenderDrawColor(renderer, 50, 255, 10, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 85, 27, 255);
     drawRectangle(renderer, 224, 288, 32, 160);//long line
     drawRectangle(renderer, 192, 416, 32, 32);//single box
 
@@ -153,28 +153,28 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
     SDL_RenderDrawLine(renderer, 192, 288, 288, 192);
 
     //Red Squares
-    SDL_SetRenderDrawColor(renderer, 255, 12, 12, 255);
+    SDL_SetRenderDrawColor(renderer, 204, 0, 0, 255);
     drawRectangle(renderer, 32, 32, 48, 48);
     drawRectangle(renderer, 32, 112, 48, 48);
     drawRectangle(renderer, 112, 112, 48, 48);
     drawRectangle(renderer, 112, 32, 48, 48);
 
     //Blue Squares
-    SDL_SetRenderDrawColor(renderer, 50, 10, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 128, 255);
     drawRectangle(renderer, 320, 32, 48, 48);
     drawRectangle(renderer, 400, 32, 48, 48);
     drawRectangle(renderer, 320, 112, 48, 48);
     drawRectangle(renderer, 400, 112, 48, 48);
 
     //Green squares   
-    SDL_SetRenderDrawColor(renderer, 50, 255, 10, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 85, 27, 255);
     drawRectangle(renderer, 32, 320, 48, 48);
     drawRectangle(renderer, 32, 400, 48, 48);
     drawRectangle(renderer, 112, 320, 48, 48);
     drawRectangle(renderer, 112, 400, 48, 48);
 
     //Yellow squares
-    SDL_SetRenderDrawColor(renderer, 255, 224, 19, 255);
+    SDL_SetRenderDrawColor(renderer, 193, 150, 19, 255);
     drawRectangle(renderer, 320, 320, 48, 48);
     drawRectangle(renderer, 320, 400, 48, 48);
     drawRectangle(renderer, 400, 400, 48, 48);
@@ -182,7 +182,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
 
     //Triangles
     //Red Triangle
-    SDL_SetRenderDrawColor(renderer, 255, 12, 12, 255);
+    SDL_SetRenderDrawColor(renderer, 204, 0, 0, 255);
     for (int x = 0; x <= 640; x++) {
         for (int y = 0; y <= 480; y++) {
             if (x > 192 && y > x && (x + y) < 480)
@@ -191,7 +191,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
     }
 
     //Blue triangle
-    SDL_SetRenderDrawColor(renderer, 50, 10, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 128, 255);
     for (int x = 0; x <= 640; x++) {
         for (int y = 0; y <= 480; y++) {
             if (y > 192 && x > y && (x + y) < 480)
@@ -199,7 +199,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
         }
     }
     //Yellow triangle
-    SDL_SetRenderDrawColor(renderer, 255, 224, 19, 255);
+    SDL_SetRenderDrawColor(renderer, 193, 150, 19, 255);
     for (int x = 0; x <= 640; x++) {
         for (int y = 0; y <= 480; y++) {
             if (x < 288 && y < x && (x + y) > 480)
@@ -207,7 +207,7 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
         }
     }
     //Green triangle
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 85, 27, 255);
     for (int x = 0; x <= 640; x++) {
         for (int y = 0; y <= 480; y++) {
             if (y < 288 && y > x && (x + y) > 480)
@@ -216,12 +216,12 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
     }
 
     //tokens
-    SDL_Delay(100);
+
     for (int i = 0; i < 4; i++) {
-        if (i == 0) SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);//red
-        if (i == 1) SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);//blue
-        if (i == 3) SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);//green
-        if (i == 2) SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);//yellow
+        if (i == 0) SDL_SetRenderDrawColor(renderer, 236, 70, 50, 255);//red
+        else if (i == 1) SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);//blue
+        else if (i == 2) SDL_SetRenderDrawColor(renderer, 255, 224, 19, 255); // yellow
+        else if (i == 3) SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);//green
         for (int j = 0; j < 4; j++) {
             drawCircle(renderer, players[i].tokens[j].x, players[i].tokens[j].y, 13);
         }
@@ -237,19 +237,20 @@ void renderBoard(SDL_Renderer* renderer, Player players[4], int dicenumber, int 
 
         SDL_Delay(500);
         if (playerturn == 0) {
-            SDL_SetRenderDrawColor(renderer, 160, 0, 20, 255);
+            SDL_SetRenderDrawColor(renderer, 236, 70, 50, 255);//red
         }
         if (playerturn == 1) {
-            SDL_SetRenderDrawColor(renderer, 50, 10, 150, 255);
-        }
-        if (playerturn == 3) {
-            SDL_SetRenderDrawColor(renderer, 178, 255, 102, 255);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);//blue
         }
         if (playerturn == 2) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 153, 255);
+            SDL_SetRenderDrawColor(renderer, 255, 224, 19, 255); // yellow
+        }
+        if (playerturn == 3) {
+            SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);//green
         }
 
         SDL_RenderClear(renderer);
+
         SDL_RenderPresent(renderer);
     }
 }
@@ -301,21 +302,21 @@ void moveToken(Token* token, int player, int dicenumber, int tokenno) {//moving 
                 break;
             }
         }
-        else if ((token->y > 288 && token->y < 480 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 3)) {
-
-            token->y -= 32;
-            dicenumber--;
-            if (token->y < 288) {
-                token->x = 480 + 96;
-                token->y = 192 + 35 * tokenno;
-                break;
-            }
-        }
         else if ((token->y > 192 + 32 && token->y < 192 + 64 && token->x > 288 && token->x < 480) && (player == 2)) {
 
             token->x -= 32;
             dicenumber--;
             if (token->x < 288) {
+                token->x = 480 + 96;
+                token->y = 192 + 35 * tokenno;
+                break;
+            }
+        }
+        else if ((token->y > 288 && token->y < 480 && token->x > 192 + 32 && token->x < 192 + 64) && (player == 3)) {
+
+            token->y -= 32;
+            dicenumber--;
+            if (token->y < 288) {
                 token->x = 480 + 128;
                 token->y = 192 + 35 * tokenno;
                 break;
@@ -383,13 +384,9 @@ void moveToken(Token* token, int player, int dicenumber, int tokenno) {//moving 
 
 }
 
-void nextplayerturn(int* playerturn) {//deciding wo plays next
-    if (*playerturn == 3) {
-        *playerturn = 0;
-    }
-    else {
-        *playerturn = *playerturn + 1;
-    }
+void nextplayerturn(int* playerturn) {//deciding who plays next
+    *playerturn = *playerturn + 1;
+    *playerturn = *playerturn % 4;
 }
 
 int checkCollision(Player players[4], Token* token, int playerturn) {// killing 
@@ -455,8 +452,42 @@ int main(int* argc, char* argv[])
 
     SDL_Init(SDL_INIT_VIDEO);
 
+
     window = SDL_CreateWindow("Ludo Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);//creating window
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);//creating renderer
+
+    // Initialize SDL_ttf
+    TTF_Init();
+    // Load a font
+    TTF_Font* font = TTF_OpenFont("E:/LBRITE.ttf", 100);
+    if (font == NULL) {
+        // Error handling
+        SDL_Log("Failed to load font: %s", TTF_GetError());
+        return 1;
+    }
+
+    // Create a color for the text (white in this case)
+    SDL_Color textColor = { 255, 255, 255, 255 };
+
+    // Create a surface from the font and text
+    SDL_Surface* surface = TTF_RenderText_Solid(font, "LUDO", textColor);
+
+    // Create a texture from the surface`
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    // Clear the renderer
+    SDL_RenderClear(renderer);
+    SDL_Rect rect = { 220, 200, 220, 80 };
+    // Render the texture on the screen
+    SDL_RenderCopy(renderer, texture, NULL, &rect);
+
+    // Update the screen
+    SDL_RenderPresent(renderer);
+
+    // Delay to show the text for a few seconds
+    SDL_Delay(6000);
+
 
 
     Player players[4];
@@ -501,7 +532,7 @@ int main(int* argc, char* argv[])
 
                         printf("Player %d turn\n", playerturn + 1);
                         dicenumber = rolldice();
-                        printf("%d\n", dicenumber);
+
                         printf("%d\n", dicenumber);
 
                         for (int j = 0; j < 4; j++) {//checks if the token are in the home box
@@ -542,15 +573,20 @@ int main(int* argc, char* argv[])
                                     c = 0;
                                 }
                                 else {
-                                    moveToken(token, i, dicenumber, j);//movement of token
-                                    if (checkwin(players, playerturn) == 4) {
+                                    int start1 = checkwin(players, playerturn);
+                                    moveToken(token, i, dicenumber, j);
+                                    int end1 = checkwin(players, playerturn);
+                                    //printf("Start z%d end %d", start1, end1);
+                                    if (end1 == 4) {
 
                                         break;
 
                                     }
-                                    if (!(checkCollision(players, token, playerturn))) {//killing rules
-                                        if (dicenumber != 6) {
-                                            nextplayerturn(&playerturn);
+                                    if (end1 - start1 == 0) {
+                                        if (!(checkCollision(players, token, playerturn))) {
+                                            if (dicenumber != 6) {
+                                                nextplayerturn(&playerturn);
+                                            }
                                         }
                                     }
 
@@ -578,23 +614,46 @@ int main(int* argc, char* argv[])
             }
         }
 
-
+        
         renderBoard(renderer, players, dicenumber, playerturn);//render the board
         if (skipturn == 1) {
             dicenumber = 0;
-            SDL_Delay(50);
+            SDL_Delay(300);
         }
-        if (checkwin(players, playerturn)) break;//if player wins stop
+        if (checkwin(players, playerturn) == 4) break;//if player wins stop
 
 
     }
 
-
+    TTF_Font* font1 = TTF_OpenFont("E:/LBRITE.ttf", 200);
     //post game destroying
+    SDL_Color textColor1 = { 0, 0, 0, 255 };
+
+    // Create a surface from the font and text
+    SDL_Surface* surface1 = TTF_RenderText_Solid(font1, "WINNER", textColor1);
+
+    // Create a texture from the surface`
+
+    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, surface1);
+
+    // Clear the renderer
+    SDL_RenderClear(renderer);
+    SDL_Rect rect1 = { 220, 200, 220, 80 };
+    // Render the texture on the screen
+    SDL_RenderCopy(renderer, texture1, NULL, &rect1);
+
+    // Update the screen
+    SDL_RenderPresent(renderer);
+
+    // Delay to show the text for a few seconds
+    SDL_Delay(3000);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
+    TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-
     return 0;
 
 }
